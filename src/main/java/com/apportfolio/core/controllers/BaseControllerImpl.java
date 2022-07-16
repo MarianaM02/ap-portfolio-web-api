@@ -24,22 +24,12 @@ public abstract class BaseControllerImpl<E extends Base, S extends BaseServiceIm
 
 	@GetMapping("")
 	public ResponseEntity<?> getAll() {
-		try {
-			return ResponseEntity.status(HttpStatus.OK).body(servicio.findAll());
-		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND)
-					.body("{\"error\":\"Error. Por favor intente más tarde.\"}");
-		}
+		return ResponseEntity.status(HttpStatus.OK).body(servicio.findAll());
 	}
 
 	@GetMapping("/paged")
 	public ResponseEntity<?> getAll(Pageable pageable) {
-		try {
-			return ResponseEntity.status(HttpStatus.OK).body(servicio.findAll(pageable));
-		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND)
-					.body("{\"error\":\"Error. Por favor intente más tarde.\"}");
-		}
+		return ResponseEntity.status(HttpStatus.OK).body(servicio.findAll(pageable));
 	}
 
 	@GetMapping("/{id}")
@@ -49,32 +39,17 @@ public abstract class BaseControllerImpl<E extends Base, S extends BaseServiceIm
 
 	@PostMapping("")
 	public ResponseEntity<?> save(@RequestBody E entity) {
-		try {
-			return ResponseEntity.status(HttpStatus.OK).body(servicio.save(entity));
-		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-					.body("{\"error\":\"Error. Por favor intente más tarde.\"}");
-		}
+		return ResponseEntity.status(HttpStatus.OK).body(servicio.save(entity));
 	}
 
 	@PutMapping("/{id}")
 	public ResponseEntity<?> update(@PathVariable Long id, @RequestBody E entity) {
-		try {
-			return ResponseEntity.status(HttpStatus.OK).body(servicio.update(id, entity));
-		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-					.body("{\"error\":\"Error. Por favor intente más tarde.\"}");
-		}
+		return ResponseEntity.status(HttpStatus.OK).body(servicio.update(id, entity));
 	}
 
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> delete(@PathVariable Long id) {
-		try {
-			return ResponseEntity.status(HttpStatus.NO_CONTENT).body(servicio.delete(id));
-		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-					.body("{\"error\":\"Error. Por favor intente más tarde.\"}");
-		}
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).body(servicio.delete(id));
 	}
 
 }

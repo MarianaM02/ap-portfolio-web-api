@@ -2,6 +2,7 @@ package com.apportfolio.core.entities;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
@@ -10,12 +11,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class Project {
+public class Project extends Base{
 	
+	private static final long serialVersionUID = 2559865199090622851L;
 	@Column(name = "project_title")
     private String projectTitle;
 	@Column(name = "description")

@@ -1,6 +1,7 @@
 package com.apportfolio.core.entities;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
@@ -8,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@Entity
 @Table(name= "hard_skill")
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,9 +17,6 @@ import lombok.Setter;
 @Setter
 public class HardSkill extends Base {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 5783592518442754365L;
 	@Column(name="skill_name")
     private String skillName;
