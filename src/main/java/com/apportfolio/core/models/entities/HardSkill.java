@@ -1,4 +1,4 @@
-package com.apportfolio.core.entities;
+package com.apportfolio.core.models.entities;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,8 +16,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class HardSkill extends Base {
-
-	private static final long serialVersionUID = 5783592518442754365L;
+	
 	@Column(name="skill_name")
     private String skillName;
 	@Column(name = "picture_url")

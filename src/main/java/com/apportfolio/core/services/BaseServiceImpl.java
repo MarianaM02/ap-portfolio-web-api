@@ -7,10 +7,13 @@ import javax.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import com.apportfolio.core.entities.Base;
 import com.apportfolio.core.exceptions.DataNotFoundException;
+import com.apportfolio.core.models.entities.Base;
 import com.apportfolio.core.repositories.BaseRepository;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public abstract class BaseServiceImpl<E extends Base, ID extends Serializable> implements BaseService<E, ID> {
 	protected BaseRepository<E, ID> baseRepository;
 
@@ -47,6 +50,7 @@ public abstract class BaseServiceImpl<E extends Base, ID extends Serializable> i
 	@Transactional
 	public E save(E entity) {
 		try {
+			log.info("Guardando {} {}", Base.class.getName(), entity.getId());
 			entity = baseRepository.save(entity);
 			return entity;
 		} catch (Exception e) {
@@ -57,6 +61,7 @@ public abstract class BaseServiceImpl<E extends Base, ID extends Serializable> i
 	@Override
 	@Transactional
 	public E update(ID id, E entity) {
+		log.info("Actualizando {} {}", Base.class.getName(), entity.getId());
 		E entityUpdate = baseRepository.findById(id).orElseThrow(() -> new DataNotFoundException(id));
 		entityUpdate = baseRepository.save(entity);
 		return entityUpdate;
@@ -69,6 +74,7 @@ public abstract class BaseServiceImpl<E extends Base, ID extends Serializable> i
 			if (!baseRepository.existsById(id)) {
 				throw new DataNotFoundException(id);
 			}
+			log.info("Borrando {} {}", Base.class.getName(), id);
 			baseRepository.deleteById(id);
 			return true;
 	}

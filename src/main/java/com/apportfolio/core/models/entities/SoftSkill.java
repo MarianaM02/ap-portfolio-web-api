@@ -1,4 +1,4 @@
-package com.apportfolio.core.entities;
+package com.apportfolio.core.models.entities;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,10 +17,6 @@ import lombok.Setter;
 @Setter
 public class SoftSkill extends Base {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -1415609163120946411L;
 	@Column(name="skill_name")
     private String skillName;
 	

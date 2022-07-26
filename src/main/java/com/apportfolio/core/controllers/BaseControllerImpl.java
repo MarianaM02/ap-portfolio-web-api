@@ -1,5 +1,9 @@
 package com.apportfolio.core.controllers;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -12,44 +16,60 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.apportfolio.core.entities.Base;
+import com.apportfolio.core.models.dto.BaseDTO;
+import com.apportfolio.core.models.entities.Base;
 import com.apportfolio.core.services.BaseServiceImpl;
 
+import lombok.RequiredArgsConstructor;
+
 @RestController
-public abstract class BaseControllerImpl<E extends Base, S extends BaseServiceImpl<E, Long>>
-		implements BaseController<E, Long> {
+@RequiredArgsConstructor
+public abstract class BaseControllerImpl<D extends BaseDTO, E extends Base, S extends BaseServiceImpl<E, Long>>{
 
 	@Autowired
 	protected S servicio;
+	private final ModelMapper modelMapper;
+	private final Class<D> classDto;
+	private final Class<E> classEntity;
 
 	@GetMapping("")
 	public ResponseEntity<?> getAll() {
-		return ResponseEntity.status(HttpStatus.OK).body(servicio.findAll());
+		List<D> dtos = servicio.findAll()
+				.stream().map(e -> modelMapper.map(e, classDto))
+				.collect(Collectors.toList());
+		return ResponseEntity.status(HttpStatus.OK).body(dtos);
 	}
 
 	@GetMapping("/paged")
 	public ResponseEntity<?> getAll(Pageable pageable) {
+		// TODO pageable
 		return ResponseEntity.status(HttpStatus.OK).body(servicio.findAll(pageable));
 	}
 
 	@GetMapping("/{id}")
 	public ResponseEntity<?> getOne(@PathVariable Long id){
-		return ResponseEntity.status(HttpStatus.OK).body(servicio.findById(id));
+		D dto = modelMapper.map(servicio.findById(id), classDto);
+		return ResponseEntity.status(HttpStatus.OK).body(dto);
 	}
 
 	@PostMapping("")
-	public ResponseEntity<?> save(@RequestBody E entity) {
-		return ResponseEntity.status(HttpStatus.OK).body(servicio.save(entity));
+	public ResponseEntity<?> save(@RequestBody D dto) {
+		E entity = modelMapper.map(dto, classEntity);
+		dto = modelMapper.map(servicio.save(entity), classDto);
+		return ResponseEntity.status(HttpStatus.CREATED).body(dto);
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<?> update(@PathVariable Long id, @RequestBody E entity) {
-		return ResponseEntity.status(HttpStatus.OK).body(servicio.update(id, entity));
+	public ResponseEntity<?> update(@PathVariable Long id, @RequestBody D dto) {
+		E entity = modelMapper.map(dto, classEntity);
+		dto = modelMapper.map(servicio.update(id, entity), classDto);
+		return ResponseEntity.status(HttpStatus.OK).body(dto);
 	}
 
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> delete(@PathVariable Long id) {
-		return ResponseEntity.status(HttpStatus.NO_CONTENT).body(servicio.delete(id));
+		D dto = modelMapper.map(servicio.delete(id), classDto);
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).body(dto);
 	}
 
 }

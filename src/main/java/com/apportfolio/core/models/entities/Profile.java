@@ -1,4 +1,4 @@
-package com.apportfolio.core.entities;
+package com.apportfolio.core.models.entities;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -21,7 +21,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Profile extends Base {
-	private static final long serialVersionUID = 3407283444738478974L;
+
 	@NotBlank(message = "Campo nombre no puede ser nulo ni estar vacío")
 	@Column(name="name")
     private String name;

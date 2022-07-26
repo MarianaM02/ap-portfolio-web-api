@@ -1,9 +1,11 @@
-package com.apportfolio.core.entities;
+package com.apportfolio.core.models.entities;
+
+import java.time.LocalDate;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
+import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToOne;
 
 import lombok.AllArgsConstructor;
@@ -11,22 +13,25 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Entity
+@MappedSuperclass
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class Project extends Base{
-	
-	private static final long serialVersionUID = 2559865199090622851L;
-	@Column(name = "project_title")
-    private String projectTitle;
+public abstract class Experience extends Base {
+
+	@Column(name = "title")
+    private String title;
+	@Column(name = "place")
+    private String place;
 	@Column(name = "description")
 	private String description;
+	@Column(name = "start_date")
+    private LocalDate startDate;
+	@Column(name = "end_date")
+	private LocalDate endDate;
 	@Column(name = "picture_url")
     private String pictureUrl;
-	@Column(name = "project_url")
-	private String projectUrl;
 	@OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "fk_user")
     private User user;

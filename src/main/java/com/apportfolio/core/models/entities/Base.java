@@ -1,6 +1,4 @@
-package com.apportfolio.core.entities;
-
-import java.io.Serializable;
+package com.apportfolio.core.models.entities;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -12,13 +10,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@SuppressWarnings("serial")
 @MappedSuperclass
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Base implements Serializable {
+public class Base {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
