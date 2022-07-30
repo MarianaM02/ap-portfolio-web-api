@@ -20,25 +20,25 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.apportfolio.core.models.dto.ExperienceDTO;
-import com.apportfolio.core.models.entities.Education;
-import com.apportfolio.core.services.EducationServiceImpl;
+import com.apportfolio.core.models.dto.SkillDTO;
+import com.apportfolio.core.models.entities.HardSkill;
+import com.apportfolio.core.services.HardSkillServiceImpl;
 
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @CrossOrigin(origins = "*")
-@RequestMapping(path = "api/education")
+@RequestMapping(path = "api/hard-skill")
 @RequiredArgsConstructor
-public class EducationControllerImpl {
+public class HardSkillController {
 
 	@Autowired
-	protected EducationServiceImpl servicio;
+	protected HardSkillServiceImpl servicio;
 	private final ModelMapper modelMapper;
 
 	@GetMapping("")
 	public ResponseEntity<?> getAll() {
-		List<ExperienceDTO> dtoList = servicio.findAll().stream().map(e -> modelMapper.map(e, ExperienceDTO.class))
+		List<SkillDTO> dtoList = servicio.findAll().stream().map(e -> modelMapper.map(e, SkillDTO.class))
 				.collect(Collectors.toList());
 		return ResponseEntity.status(HttpStatus.OK).body(dtoList);
 	}
@@ -51,27 +51,27 @@ public class EducationControllerImpl {
 
 	@GetMapping("/{id}")
 	public ResponseEntity<?> getOne(@PathVariable Long id) {
-		ExperienceDTO dto = modelMapper.map(servicio.findById(id), ExperienceDTO.class);
+		SkillDTO dto = modelMapper.map(servicio.findById(id), SkillDTO.class);
 		return ResponseEntity.status(HttpStatus.OK).body(dto);
 	}
 
 	@PostMapping("")
-	public ResponseEntity<?> save(@Valid @RequestBody ExperienceDTO dto) {
-		Education entity = modelMapper.map(dto, Education.class);
-		dto = modelMapper.map(servicio.save(entity), ExperienceDTO.class);
+	public ResponseEntity<?> save(@Valid @RequestBody SkillDTO dto) {
+		HardSkill entity = modelMapper.map(dto, HardSkill.class);
+		dto = modelMapper.map(servicio.save(entity), SkillDTO.class);
 		return ResponseEntity.status(HttpStatus.CREATED).body(dto);
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<?> update(@PathVariable Long id, @Valid @RequestBody ExperienceDTO dto) {
-		Education entity = modelMapper.map(dto, Education.class);
-		dto = modelMapper.map(servicio.update(id, entity), ExperienceDTO.class);
+	public ResponseEntity<?> update(@PathVariable Long id, @Valid @RequestBody SkillDTO dto) {
+		HardSkill entity = modelMapper.map(dto, HardSkill.class);
+		dto = modelMapper.map(servicio.update(id, entity), SkillDTO.class);
 		return ResponseEntity.status(HttpStatus.OK).body(dto);
 	}
 
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> delete(@PathVariable Long id) {
-		ExperienceDTO dto = modelMapper.map(servicio.delete(id), ExperienceDTO.class);
+		SkillDTO dto = modelMapper.map(servicio.delete(id), SkillDTO.class);
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).body(dto);
 	}
 

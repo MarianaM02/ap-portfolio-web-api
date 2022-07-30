@@ -17,6 +17,10 @@ import lombok.extern.slf4j.Slf4j;
 public abstract class BaseServiceImpl<E extends Base, ID extends Serializable> implements BaseService<E, ID> {
 	protected BaseRepository<E, ID> baseRepository;
 
+	public BaseServiceImpl() {
+
+	}
+
 	public BaseServiceImpl(BaseRepository<E, ID> baseRepository) {
 		this.baseRepository = baseRepository;
 	}
@@ -25,7 +29,7 @@ public abstract class BaseServiceImpl<E extends Base, ID extends Serializable> i
 	@Transactional
 	public List<E> findAll() {
 		List<E> entities = baseRepository.findAll();
-		if (!entities.isEmpty())
+		if (entities == null)
 			throw new DataNotFoundException("No hay contenido");
 		return entities;
 	}
@@ -50,8 +54,8 @@ public abstract class BaseServiceImpl<E extends Base, ID extends Serializable> i
 	@Transactional
 	public E save(E entity) {
 		try {
-			log.info("Guardando {} {}", Base.class.getName(), entity.getId());
 			entity = baseRepository.save(entity);
+			log.info("Guardando {} {}", entity.getId());
 			return entity;
 		} catch (Exception e) {
 			throw new DataNotFoundException(entity.getId());
@@ -71,11 +75,11 @@ public abstract class BaseServiceImpl<E extends Base, ID extends Serializable> i
 	@Override
 	@Transactional
 	public boolean delete(ID id) {
-			if (!baseRepository.existsById(id)) {
-				throw new DataNotFoundException(id);
-			}
-			log.info("Borrando {} {}", Base.class.getName(), id);
-			baseRepository.deleteById(id);
-			return true;
+		if (!baseRepository.existsById(id)) {
+			throw new DataNotFoundException(id);
+		}
+		log.info("Borrando {} {}", Base.class.getName(), id);
+		baseRepository.deleteById(id);
+		return true;
 	}
 }

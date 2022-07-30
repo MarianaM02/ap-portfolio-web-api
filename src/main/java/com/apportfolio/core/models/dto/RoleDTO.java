@@ -10,6 +10,6 @@ public class RoleDTO extends BaseDTO {
 
 	private static final long serialVersionUID = 3094964119578597546L;
 	@NotBlank(message = "Campo nombre no puede ser nulo ni estar vacío")
-	private String name;
+	private String roleName;
 
 }

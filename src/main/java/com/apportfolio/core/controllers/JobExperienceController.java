@@ -20,28 +20,25 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.apportfolio.core.models.dto.ProfileDTO;
-import com.apportfolio.core.models.entities.Profile;
-import com.apportfolio.core.services.ProfileServiceImpl;
+import com.apportfolio.core.models.dto.ExperienceDTO;
+import com.apportfolio.core.models.entities.JobExperience;
+import com.apportfolio.core.services.JobExperienceServiceImpl;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @CrossOrigin(origins = "*")
-@RequestMapping(path = "api/profile")
+@RequestMapping(path = "api/job-experience")
 @RequiredArgsConstructor
-@Slf4j
-public class ProfileControllerImpl {
+public class JobExperienceController {
 
 	@Autowired
-	protected ProfileServiceImpl servicio;
+	protected JobExperienceServiceImpl servicio;
 	private final ModelMapper modelMapper;
 
 	@GetMapping("")
 	public ResponseEntity<?> getAll() {
-		log.info("Trayendo todos los perfiles");
-		List<ProfileDTO> dtoList = servicio.findAll().stream().map(e -> modelMapper.map(e, ProfileDTO.class))
+		List<ExperienceDTO> dtoList = servicio.findAll().stream().map(e -> modelMapper.map(e, ExperienceDTO.class))
 				.collect(Collectors.toList());
 		return ResponseEntity.status(HttpStatus.OK).body(dtoList);
 	}
@@ -54,31 +51,27 @@ public class ProfileControllerImpl {
 
 	@GetMapping("/{id}")
 	public ResponseEntity<?> getOne(@PathVariable Long id) {
-		log.info("Trayendo el perfil {}", id);
-		ProfileDTO dto = modelMapper.map(servicio.findById(id), ProfileDTO.class);
+		ExperienceDTO dto = modelMapper.map(servicio.findById(id), ExperienceDTO.class);
 		return ResponseEntity.status(HttpStatus.OK).body(dto);
 	}
 
 	@PostMapping("")
-	public ResponseEntity<?> save(@Valid @RequestBody ProfileDTO dto) {
-		log.info("Creando el perfil de {}", dto.getName());
-		Profile entity = modelMapper.map(dto, Profile.class);
-		dto = modelMapper.map(servicio.save(entity), ProfileDTO.class);
+	public ResponseEntity<?> save(@Valid @RequestBody ExperienceDTO dto) {
+		JobExperience entity = modelMapper.map(dto, JobExperience.class);
+		dto = modelMapper.map(servicio.save(entity), ExperienceDTO.class);
 		return ResponseEntity.status(HttpStatus.CREATED).body(dto);
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<?> update(@PathVariable Long id, @Valid @RequestBody ProfileDTO dto) {
-		log.info("Actualizando el perfil {}", id);
-		Profile entity = modelMapper.map(dto, Profile.class);
-		dto = modelMapper.map(servicio.update(id, entity), ProfileDTO.class);
+	public ResponseEntity<?> update(@PathVariable Long id, @Valid @RequestBody ExperienceDTO dto) {
+		JobExperience entity = modelMapper.map(dto, JobExperience.class);
+		dto = modelMapper.map(servicio.update(id, entity), ExperienceDTO.class);
 		return ResponseEntity.status(HttpStatus.OK).body(dto);
 	}
 
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> delete(@PathVariable Long id) {
-		log.info("Borrando el perfil {}", id);
-		ProfileDTO dto = modelMapper.map(servicio.delete(id), ProfileDTO.class);
+		ExperienceDTO dto = modelMapper.map(servicio.delete(id), ExperienceDTO.class);
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).body(dto);
 	}
 
