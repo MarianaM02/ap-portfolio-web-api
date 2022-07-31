@@ -14,6 +14,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
+import com.apportfolio.core.security.CustomAuthorizationFilter;
+
 import lombok.RequiredArgsConstructor;
 
 @Configuration
@@ -25,6 +27,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	private final UserDetailsService userDetailsService;
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;
+	private final CustomAuthorizationFilter athorizationFilter;
 	
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -33,20 +36,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		CustomAuthenticationFilter customAuthenticationFilter = new CustomAuthenticationFilter(authenticationManagerBean());
-		customAuthenticationFilter.setFilterProcessesUrl("/api/login");
 		http.csrf().disable();
 		http.cors();
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-		// TODO authorize Request
 		http.authorizeRequests().antMatchers(HttpMethod.GET, "api/**").permitAll();
 		http.authorizeRequests().antMatchers(HttpMethod.POST, "/api/login/**", "/api/user/token/refresh/**").permitAll();
 		http.authorizeRequests().antMatchers(HttpMethod.DELETE, "api/user/**").hasAnyAuthority("ROLE_ADMIN");
 		http.authorizeRequests().antMatchers(HttpMethod.POST, "api/**").hasAnyAuthority("ROLE_USER");
 		http.authorizeRequests().antMatchers(HttpMethod.PUT, "api/**").hasAnyAuthority("ROLE_USER");
-		// http.authorizeRequests().anyRequest().permitAll();
-		http.addFilter(customAuthenticationFilter);		
-		http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);		
+		// http.authorizeRequests().anyRequest().permitAll();	
+		http.addFilterBefore(athorizationFilter, UsernamePasswordAuthenticationFilter.class);		
 	}
 	
 	@Bean

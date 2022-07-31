@@ -1,5 +1,6 @@
 package com.apportfolio.core.models.dto;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
 import javax.validation.constraints.NotBlank;
@@ -9,9 +10,10 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-public class ExperienceDTO extends BaseDTO{
+public class ExperienceDTO implements Serializable{
 
 	private static final long serialVersionUID = 5253989018929473125L;
+	private Long id;
 	@NotBlank(message = "Campo título no puede ser nulo ni estar vacío")
 	private String title;
     private String place;

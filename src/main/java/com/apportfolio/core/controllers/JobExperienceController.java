@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.apportfolio.core.models.dto.ExperienceDTO;
 import com.apportfolio.core.models.entities.JobExperience;
 import com.apportfolio.core.services.JobExperienceServiceImpl;
+import com.apportfolio.core.services.UserServiceImpl;
 
 import lombok.RequiredArgsConstructor;
 
@@ -31,14 +31,13 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping(path = "api/job-experience")
 @RequiredArgsConstructor
 public class JobExperienceController {
-
-	@Autowired
-	protected JobExperienceServiceImpl servicio;
+	private final UserServiceImpl userService;
+	private final JobExperienceServiceImpl jobExperienceService;
 	private final ModelMapper modelMapper;
 
 	@GetMapping("")
 	public ResponseEntity<?> getAll() {
-		List<ExperienceDTO> dtoList = servicio.findAll().stream().map(e -> modelMapper.map(e, ExperienceDTO.class))
+		List<ExperienceDTO> dtoList = jobExperienceService.findAll().stream().map(e -> modelMapper.map(e, ExperienceDTO.class))
 				.collect(Collectors.toList());
 		return ResponseEntity.status(HttpStatus.OK).body(dtoList);
 	}
@@ -46,33 +45,40 @@ public class JobExperienceController {
 	@GetMapping("/paged")
 	public ResponseEntity<?> getAll(Pageable pageable) {
 		// TODO pageable
-		return ResponseEntity.status(HttpStatus.OK).body(servicio.findAll(pageable));
+		return ResponseEntity.status(HttpStatus.OK).body(jobExperienceService.findAll(pageable));
 	}
 
 	@GetMapping("/{id}")
 	public ResponseEntity<?> getOne(@PathVariable Long id) {
-		ExperienceDTO dto = modelMapper.map(servicio.findById(id), ExperienceDTO.class);
+		ExperienceDTO dto = modelMapper.map(jobExperienceService.findById(id), ExperienceDTO.class);
 		return ResponseEntity.status(HttpStatus.OK).body(dto);
 	}
 
 	@PostMapping("")
 	public ResponseEntity<?> save(@Valid @RequestBody ExperienceDTO dto) {
 		JobExperience entity = modelMapper.map(dto, JobExperience.class);
-		dto = modelMapper.map(servicio.save(entity), ExperienceDTO.class);
+		dto = modelMapper.map(jobExperienceService.save(entity), ExperienceDTO.class);
 		return ResponseEntity.status(HttpStatus.CREATED).body(dto);
 	}
 
 	@PutMapping("/{id}")
 	public ResponseEntity<?> update(@PathVariable Long id, @Valid @RequestBody ExperienceDTO dto) {
 		JobExperience entity = modelMapper.map(dto, JobExperience.class);
-		dto = modelMapper.map(servicio.update(id, entity), ExperienceDTO.class);
+		dto = modelMapper.map(jobExperienceService.update(id, entity), ExperienceDTO.class);
 		return ResponseEntity.status(HttpStatus.OK).body(dto);
 	}
 
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> delete(@PathVariable Long id) {
-		ExperienceDTO dto = modelMapper.map(servicio.delete(id), ExperienceDTO.class);
+		ExperienceDTO dto = modelMapper.map(jobExperienceService.delete(id), ExperienceDTO.class);
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).body(dto);
 	}
 
+	@GetMapping("/user/{id}")
+	public ResponseEntity<?> getAllByUser(@PathVariable Long id) {
+		List<ExperienceDTO> dtoList = jobExperienceService.findByUser(userService.findById(id)).stream().map(e -> modelMapper.map(e, ExperienceDTO.class))
+				.collect(Collectors.toList());
+		return ResponseEntity.status(HttpStatus.OK).body(dtoList);
+	}
+	
 }

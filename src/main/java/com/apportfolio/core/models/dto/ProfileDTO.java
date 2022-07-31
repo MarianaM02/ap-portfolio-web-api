@@ -1,5 +1,7 @@
 package com.apportfolio.core.models.dto;
 
+import java.io.Serializable;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -8,9 +10,10 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-public class ProfileDTO extends BaseDTO {
+public class ProfileDTO implements Serializable {
 
 	private static final long serialVersionUID = -6055282818271325605L;
+	private Long id;
 	@NotBlank(message = "Campo nombre no puede ser nulo ni estar vacío")
     private String name;
 	@NotBlank(message = "Campo apellido no puede ser nulo ni estar vacío")

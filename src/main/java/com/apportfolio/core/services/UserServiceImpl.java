@@ -7,7 +7,6 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -32,11 +31,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService, UserDetailsService {
-
-	@Autowired
-	private UserRepository userRepository;
-	@Autowired
-	private RoleRepository roleRepository;
+	private final UserRepository userRepository;
+	private final RoleRepository roleRepository;
 	private final PasswordEncoder passwordEncoder;
 	
 	@Override
@@ -104,12 +100,17 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	@Override
 	@Transactional
 	public User save(User entity) {
-		log.info("Guardando usuario: {}", entity.getEmail());
-		entity.setPass(passwordEncoder.encode(entity.getPass()));
-		if(entity.getRoles().isEmpty()) {
-			entity.getRoles().add(roleRepository.findByRole(RoleName.ROLE_USER));
-		}
-		return userRepository.save(entity);
+		User user = userRepository.findByEmail(entity.getEmail()).orElse(null);
+		if(user == null) {
+			log.info("Guardando usuario: {}", entity.getEmail());
+			entity.setPass(passwordEncoder.encode(entity.getPass()));
+			if(entity.getRoles().isEmpty()) {
+				entity.getRoles().add(roleRepository.findByRole(RoleName.ROLE_USER));
+			}
+			return userRepository.save(entity);
+		} 
+		log.info("Usuario ya existe: {}", entity.getEmail());
+		return user;
 	}
 	
 	
@@ -150,10 +151,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     	roles.forEach(role -> this.addRole(user, role));
 		return user;
     }
-    
-    
-    
-    
+
     
     @Transactional
     public User removeRole(User user, Role role) {

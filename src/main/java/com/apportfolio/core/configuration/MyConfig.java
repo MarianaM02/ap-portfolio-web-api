@@ -19,6 +19,7 @@ import com.apportfolio.core.models.entities.User;
 import com.apportfolio.core.services.RoleServiceImpl;
 import com.apportfolio.core.services.UserServiceImpl;
 
+@SuppressWarnings("deprecation")
 @Configuration
 public class MyConfig {
 
@@ -30,8 +31,8 @@ public class MyConfig {
 	@Bean
 	CommandLineRunner run(RoleServiceImpl roleService, UserServiceImpl userService) {
 		return args -> {
-			roleService.save(new Role(RoleName.ROLE_ADMIN));
-			roleService.save(new Role(RoleName.ROLE_USER));
+			roleService.save(RoleName.ROLE_ADMIN);
+			roleService.save(RoleName.ROLE_USER);
 
 			userService.makeAdmin(
 					userService.save(new User("mrn.m.92@gmail.com", "12345678", new HashSet<Role>())).getId());
@@ -39,6 +40,7 @@ public class MyConfig {
 					userService.save(new User("namira.r.m2@gmail.com", "12345678", new HashSet<Role>())).getId());
 			userService.save(new User("marysm92@hotmail.com", "12345678", new HashSet<Role>()));
 			userService.save(new User("mrn.m.93@gmail.com", "12345678", new HashSet<Role>()));
+			
 
 		};
 	}

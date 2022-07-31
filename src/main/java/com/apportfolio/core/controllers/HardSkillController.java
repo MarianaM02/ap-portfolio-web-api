@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.apportfolio.core.models.dto.SkillDTO;
 import com.apportfolio.core.models.entities.HardSkill;
 import com.apportfolio.core.services.HardSkillServiceImpl;
+import com.apportfolio.core.services.UserServiceImpl;
 
 import lombok.RequiredArgsConstructor;
 
@@ -31,14 +31,13 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping(path = "api/hard-skill")
 @RequiredArgsConstructor
 public class HardSkillController {
-
-	@Autowired
-	protected HardSkillServiceImpl servicio;
+	private final UserServiceImpl userService;
+	private final HardSkillServiceImpl hardSkillService;
 	private final ModelMapper modelMapper;
 
 	@GetMapping("")
 	public ResponseEntity<?> getAll() {
-		List<SkillDTO> dtoList = servicio.findAll().stream().map(e -> modelMapper.map(e, SkillDTO.class))
+		List<SkillDTO> dtoList = hardSkillService.findAll().stream().map(e -> modelMapper.map(e, SkillDTO.class))
 				.collect(Collectors.toList());
 		return ResponseEntity.status(HttpStatus.OK).body(dtoList);
 	}
@@ -46,33 +45,40 @@ public class HardSkillController {
 	@GetMapping("/paged")
 	public ResponseEntity<?> getAll(Pageable pageable) {
 		// TODO pageable
-		return ResponseEntity.status(HttpStatus.OK).body(servicio.findAll(pageable));
+		return ResponseEntity.status(HttpStatus.OK).body(hardSkillService.findAll(pageable));
 	}
 
 	@GetMapping("/{id}")
 	public ResponseEntity<?> getOne(@PathVariable Long id) {
-		SkillDTO dto = modelMapper.map(servicio.findById(id), SkillDTO.class);
+		SkillDTO dto = modelMapper.map(hardSkillService.findById(id), SkillDTO.class);
 		return ResponseEntity.status(HttpStatus.OK).body(dto);
 	}
 
 	@PostMapping("")
 	public ResponseEntity<?> save(@Valid @RequestBody SkillDTO dto) {
 		HardSkill entity = modelMapper.map(dto, HardSkill.class);
-		dto = modelMapper.map(servicio.save(entity), SkillDTO.class);
+		dto = modelMapper.map(hardSkillService.save(entity), SkillDTO.class);
 		return ResponseEntity.status(HttpStatus.CREATED).body(dto);
 	}
 
 	@PutMapping("/{id}")
 	public ResponseEntity<?> update(@PathVariable Long id, @Valid @RequestBody SkillDTO dto) {
 		HardSkill entity = modelMapper.map(dto, HardSkill.class);
-		dto = modelMapper.map(servicio.update(id, entity), SkillDTO.class);
+		dto = modelMapper.map(hardSkillService.update(id, entity), SkillDTO.class);
 		return ResponseEntity.status(HttpStatus.OK).body(dto);
 	}
 
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> delete(@PathVariable Long id) {
-		SkillDTO dto = modelMapper.map(servicio.delete(id), SkillDTO.class);
+		SkillDTO dto = modelMapper.map(hardSkillService.delete(id), SkillDTO.class);
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).body(dto);
 	}
-
+	
+	@GetMapping("/user/{id}")
+	public ResponseEntity<?> getAllByUser(@PathVariable Long id) {
+		List<SkillDTO> dtoList = hardSkillService.findByUser(userService.findById(id)).stream().map(e -> modelMapper.map(e, SkillDTO.class))
+				.collect(Collectors.toList());
+		return ResponseEntity.status(HttpStatus.OK).body(dtoList);
+	}
+	
 }

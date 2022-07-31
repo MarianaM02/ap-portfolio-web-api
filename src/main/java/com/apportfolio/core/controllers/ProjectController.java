@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.apportfolio.core.models.dto.ProjectDTO;
 import com.apportfolio.core.models.entities.Project;
 import com.apportfolio.core.services.ProjectServiceImpl;
+import com.apportfolio.core.services.UserServiceImpl;
 
 import lombok.RequiredArgsConstructor;
 
@@ -31,14 +31,13 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping(path = "api/project")
 @RequiredArgsConstructor
 public class ProjectController {
-
-	@Autowired
-	protected ProjectServiceImpl servicio;
+	private final UserServiceImpl userService;
+	private final ProjectServiceImpl projectService;
 	private final ModelMapper modelMapper;
 
 	@GetMapping("")
 	public ResponseEntity<?> getAll() {
-		List<ProjectDTO> dtoList = servicio.findAll().stream().map(e -> modelMapper.map(e, ProjectDTO.class))
+		List<ProjectDTO> dtoList = projectService.findAll().stream().map(e -> modelMapper.map(e, ProjectDTO.class))
 				.collect(Collectors.toList());
 		return ResponseEntity.status(HttpStatus.OK).body(dtoList);
 	}
@@ -46,32 +45,39 @@ public class ProjectController {
 	@GetMapping("/paged")
 	public ResponseEntity<?> getAll(Pageable pageable) {
 		// TODO pageable
-		return ResponseEntity.status(HttpStatus.OK).body(servicio.findAll(pageable));
+		return ResponseEntity.status(HttpStatus.OK).body(projectService.findAll(pageable));
 	}
 
 	@GetMapping("/{id}")
 	public ResponseEntity<?> getOne(@PathVariable Long id) {
-		ProjectDTO dto = modelMapper.map(servicio.findById(id), ProjectDTO.class);
+		ProjectDTO dto = modelMapper.map(projectService.findById(id), ProjectDTO.class);
 		return ResponseEntity.status(HttpStatus.OK).body(dto);
 	}
 
 	@PostMapping("")
 	public ResponseEntity<?> save(@Valid @RequestBody ProjectDTO dto) {
 		Project entity = modelMapper.map(dto, Project.class);
-		dto = modelMapper.map(servicio.save(entity), ProjectDTO.class);
+		dto = modelMapper.map(projectService.save(entity), ProjectDTO.class);
 		return ResponseEntity.status(HttpStatus.CREATED).body(dto);
 	}
 
 	@PutMapping("/{id}")
 	public ResponseEntity<?> update(@PathVariable Long id, @Valid @RequestBody ProjectDTO dto) {
 		Project entity = modelMapper.map(dto, Project.class);
-		dto = modelMapper.map(servicio.update(id, entity), ProjectDTO.class);
+		dto = modelMapper.map(projectService.update(id, entity), ProjectDTO.class);
 		return ResponseEntity.status(HttpStatus.OK).body(dto);
 	}
 
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> delete(@PathVariable Long id) {
-		ProjectDTO dto = modelMapper.map(servicio.delete(id), ProjectDTO.class);
+		ProjectDTO dto = modelMapper.map(projectService.delete(id), ProjectDTO.class);
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).body(dto);
+	}
+	
+	@GetMapping("/user/{id}")
+	public ResponseEntity<?> getAllByUser(@PathVariable Long id) {
+		List<ProjectDTO> dtoList = projectService.findByUser(userService.findById(id)).stream().map(e -> modelMapper.map(e, ProjectDTO.class))
+				.collect(Collectors.toList());
+		return ResponseEntity.status(HttpStatus.OK).body(dtoList);
 	}
 }
