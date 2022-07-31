@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.apportfolio.core.models.dto.SkillDTO;
 import com.apportfolio.core.models.entities.SoftSkill;
-import com.apportfolio.core.models.entities.User;
 import com.apportfolio.core.services.SoftSkillServiceImpl;
 import com.apportfolio.core.services.UserServiceImpl;
 

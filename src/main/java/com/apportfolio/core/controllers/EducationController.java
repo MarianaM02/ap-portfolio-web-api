@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.apportfolio.core.models.dto.ExperienceDTO;
 import com.apportfolio.core.models.entities.Education;
+import com.apportfolio.core.models.entities.User;
 import com.apportfolio.core.services.EducationServiceImpl;
 import com.apportfolio.core.services.UserServiceImpl;
 
@@ -57,13 +58,21 @@ public class EducationController {
 	@PostMapping("")
 	public ResponseEntity<?> save(@Valid @RequestBody ExperienceDTO dto) {
 		Education entity = modelMapper.map(dto, Education.class);
+		User user = userService.findById(dto.getUserId());
+		entity.setUser(user);
 		dto = modelMapper.map(educationService.save(entity), ExperienceDTO.class);
 		return ResponseEntity.status(HttpStatus.CREATED).body(dto);
 	}
 
 	@PutMapping("/{id}")
 	public ResponseEntity<?> update(@PathVariable Long id, @Valid @RequestBody ExperienceDTO dto) {
-		Education entity = modelMapper.map(dto, Education.class);
+		Education entity = educationService.findById(id);
+		entity.setTitle(dto.getTitle());
+		entity.setDescription(dto.getDescription());
+		entity.setPlace(dto.getPlace());
+		entity.setPictureUrl(dto.getPictureUrl());
+		entity.setStartDate(dto.getStartDate());
+		entity.setEndDate(dto.getEndDate());
 		dto = modelMapper.map(educationService.update(id, entity), ExperienceDTO.class);
 		return ResponseEntity.status(HttpStatus.OK).body(dto);
 	}

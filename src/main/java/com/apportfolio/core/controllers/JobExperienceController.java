@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.apportfolio.core.models.dto.ExperienceDTO;
 import com.apportfolio.core.models.entities.JobExperience;
+import com.apportfolio.core.models.entities.User;
 import com.apportfolio.core.services.JobExperienceServiceImpl;
 import com.apportfolio.core.services.UserServiceImpl;
 
@@ -57,13 +58,21 @@ public class JobExperienceController {
 	@PostMapping("")
 	public ResponseEntity<?> save(@Valid @RequestBody ExperienceDTO dto) {
 		JobExperience entity = modelMapper.map(dto, JobExperience.class);
+		User user = userService.findById(dto.getUserId());
+		entity.setUser(user);
 		dto = modelMapper.map(jobExperienceService.save(entity), ExperienceDTO.class);
 		return ResponseEntity.status(HttpStatus.CREATED).body(dto);
 	}
 
 	@PutMapping("/{id}")
 	public ResponseEntity<?> update(@PathVariable Long id, @Valid @RequestBody ExperienceDTO dto) {
-		JobExperience entity = modelMapper.map(dto, JobExperience.class);
+		JobExperience entity = jobExperienceService.findById(id);
+		entity.setTitle(dto.getTitle());
+		entity.setDescription(dto.getDescription());
+		entity.setPlace(dto.getPlace());
+		entity.setPictureUrl(dto.getPictureUrl());
+		entity.setStartDate(dto.getStartDate());
+		entity.setEndDate(dto.getEndDate());
 		dto = modelMapper.map(jobExperienceService.update(id, entity), ExperienceDTO.class);
 		return ResponseEntity.status(HttpStatus.OK).body(dto);
 	}

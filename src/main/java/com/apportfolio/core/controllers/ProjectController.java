@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.apportfolio.core.models.dto.ProjectDTO;
 import com.apportfolio.core.models.entities.Project;
+import com.apportfolio.core.models.entities.User;
 import com.apportfolio.core.services.ProjectServiceImpl;
 import com.apportfolio.core.services.UserServiceImpl;
 
@@ -57,13 +58,19 @@ public class ProjectController {
 	@PostMapping("")
 	public ResponseEntity<?> save(@Valid @RequestBody ProjectDTO dto) {
 		Project entity = modelMapper.map(dto, Project.class);
+		User user = userService.findById(dto.getUserId());
+		entity.setUser(user);
 		dto = modelMapper.map(projectService.save(entity), ProjectDTO.class);
 		return ResponseEntity.status(HttpStatus.CREATED).body(dto);
 	}
 
 	@PutMapping("/{id}")
 	public ResponseEntity<?> update(@PathVariable Long id, @Valid @RequestBody ProjectDTO dto) {
-		Project entity = modelMapper.map(dto, Project.class);
+		Project entity = projectService.findById(id);
+		entity.setProjectTitle(dto.getProjectTitle());
+		entity.setDescription(dto.getDescription());
+		entity.setPictureUrl(dto.getPictureUrl());
+		entity.setProjectUrl(dto.getProjectUrl());
 		dto = modelMapper.map(projectService.update(id, entity), ProjectDTO.class);
 		return ResponseEntity.status(HttpStatus.OK).body(dto);
 	}

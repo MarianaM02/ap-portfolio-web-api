@@ -57,6 +57,8 @@ public class HardSkillController {
 	@PostMapping("")
 	public ResponseEntity<?> save(@Valid @RequestBody SkillDTO dto) {
 		HardSkill entity = modelMapper.map(dto, HardSkill.class);
+		// TODO many to many creacion
+		// User user = userService.findById(dto.getUserId());
 		dto = modelMapper.map(hardSkillService.save(entity), SkillDTO.class);
 		return ResponseEntity.status(HttpStatus.CREATED).body(dto);
 	}
