@@ -36,7 +36,12 @@ public class Profile extends Base {
     private String location;
     @Size(max=2000, message="La sección supera el máximo de caracteres")
     @Column(name = "about", length = 2000)
-    private String about;    
+    private String about;
+    @Column(name = "github_url")
+    private String githubUrl;
+    @Column(name = "linkedin_url")
+    private String linkedinUrl;
+    
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "fk_user")
     private User user;

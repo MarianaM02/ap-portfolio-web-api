@@ -74,7 +74,9 @@ public class UserController {
 	@PutMapping("/{id}")
 	public ResponseEntity<?> update(@PathVariable Long id, @Valid @RequestBody UserCreateDTO dto) {
 		log.info("Actualizando el usuario {}", id);
-		User entity = modelMapper.map(dto, User.class);
+		User entity = userService.findById(id);
+		entity.setEmail(dto.getEmail());
+		entity.setPass(dto.getPass());
 		dto = modelMapper.map(userService.update(id, entity), UserCreateDTO.class);
 		return ResponseEntity.status(HttpStatus.OK).body(dto);
 	}

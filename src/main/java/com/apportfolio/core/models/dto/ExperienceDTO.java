@@ -18,7 +18,6 @@ public class ExperienceDTO implements Serializable{
 	private String title;
     private String place;
 	private String description;
-	@NotBlank(message = "Campo fecha de comienzo no puede ser nulo ni estar vacío")
     private LocalDate startDate;
 	private LocalDate endDate;
     private String pictureUrl;

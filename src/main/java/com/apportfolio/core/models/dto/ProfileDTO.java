@@ -23,6 +23,8 @@ public class ProfileDTO implements Serializable {
     private String location;
     @Size(max=2000, message="La sección supera el máximo de caracteres")
     private String about;
+    private String githubUrl;
+    private String linkedinUrl;
     @NotNull
     private Long userId;
     

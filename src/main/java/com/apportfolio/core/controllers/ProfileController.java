@@ -79,6 +79,8 @@ public class ProfileController {
 		entity.setLocation(dto.getLocation());
 		entity.setPictureUrl(dto.getPictureUrl());
 		entity.setTitle(dto.getTitle());
+		entity.setGithubUrl(dto.getGithubUrl());
+		entity.setLinkedinUrl(dto.getLinkedinUrl());
 		dto = modelMapper.map(profileService.update(id, entity), ProfileDTO.class);
 		return ResponseEntity.status(HttpStatus.OK).body(dto);
 	}
