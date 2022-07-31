@@ -1,29 +1,5 @@
 {"properties": [
-  {
-    "name": "app.jwt.hearder",
-    "type": "java.lang.String",
-    "description": "A description for 'app.jwt.hearder'"
-  },
-  {
-    "name": "app.jwt.header.prefix",
-    "type": "java.lang.String",
-    "description": "A description for 'app.jwt.header.prefix'"
-  },
-  {
-    "name": "app.jwt.secret",
-    "type": "java.lang.String",
-    "description": "A description for 'app.jwt.secret'"
-  },
-  {
-    "name": "app.jwt.header",
-    "type": "java.lang.String",
-    "description": "A description for 'app.jwt.header'"
-  },
-  {
-    "name": "app.jwt.expiration",
-    "type": "java.lang.String",
-    "description": "A description for 'app.jwt.expiration'"
-  },
+
   {
     "name": "jwt.secret",
     "type": "java.lang.String",
@@ -33,5 +9,15 @@
     "name": "jwt.expiration",
     "type": "java.lang.String",
     "description": "A description for 'jwt.expiration'"
+  },
+  {
+    "name": "admin.username",
+    "type": "java.lang.String",
+    "description": "A description for 'admin.username'"
+  },
+  {
+    "name": "admin.password",
+    "type": "java.lang.String",
+    "description": "A description for 'admin.password'"
   }
 ]}

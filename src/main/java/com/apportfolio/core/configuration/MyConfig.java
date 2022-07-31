@@ -3,6 +3,7 @@ package com.apportfolio.core.configuration;
 import java.util.HashSet;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 
@@ -22,6 +23,10 @@ import com.apportfolio.core.services.UserServiceImpl;
 @SuppressWarnings("deprecation")
 @Configuration
 public class MyConfig {
+	@Value("${admin.username}")
+	String email;
+	@Value("${admin.password}")
+	String pass;
 
 	@Bean
 	ModelMapper modelMapper() {
@@ -33,14 +38,10 @@ public class MyConfig {
 		return args -> {
 			roleService.save(RoleName.ROLE_ADMIN);
 			roleService.save(RoleName.ROLE_USER);
+			
 
 			userService.makeAdmin(
-					userService.save(new User("mrn.m.92@gmail.com", "12345678", new HashSet<Role>())).getId());
-			userService.makeAdmin(
-					userService.save(new User("namira.r.m2@gmail.com", "12345678", new HashSet<Role>())).getId());
-			userService.save(new User("marysm92@hotmail.com", "12345678", new HashSet<Role>()));
-			userService.save(new User("mrn.m.93@gmail.com", "12345678", new HashSet<Role>()));
-			
+					userService.save(new User(email, pass, new HashSet<Role>())).getId());
 
 		};
 	}
